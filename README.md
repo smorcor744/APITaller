@@ -45,6 +45,7 @@ Fecha_Cita: Fecha y hora de la cita (datetime, not null)
 Estado: Estado de la cita (varchar, not null, default 'Pendiente')
 
 Campos y Tipos de Datos
+
 Usuarios: ID, Nombre, Email, Contraseña, Fecha_Creación
 
 Servicios: ID, Nombre_Servicio, Descripción, Precio
