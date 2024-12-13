@@ -1,39 +1,47 @@
 package com.example.APITaller.controller
 
-import com.example.APITaller.model.Citas
+import com.example.APITaller.model.Servicios
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/citas")
-class EndpointsCitas {
+@RequestMapping("/servicios")
+class ServiciosController {
+
     @PostMapping
-    fun postNewCitas (
-        @RequestBody newCita: Citas
+    fun postNewServicio (
+        @RequestBody newServicios: Servicios
     ) : String {
         return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"
     }
 
     @GetMapping
-    fun getAllCitas () : String {
+    fun getAllServicios () : String {
         return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"
     }
 
     @GetMapping("/{id}")
-    fun getCitaById (
+    fun getServicioById (
         @PathVariable id : String
     ) : String {
         return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"
     }
 
+    @GetMapping("?nombre={nombre}")
+    fun getServicioByName (
+        @PathVariable nombre : String
+    ) : String {
+        return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"
+    }
+
     @PutMapping("/{id}")
-    fun updateCita (
-        @RequestBody cita: Citas
+    fun updateServicio (
+        @PathVariable id: Servicios
     ) : String {
         return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"
     }
 
     @DeleteMapping("/{id}")
-    fun deleteCitaById (
+    fun deleteServicioById (
         @PathVariable id : String
     ) : String {
         return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"

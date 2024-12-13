@@ -39,16 +39,23 @@ class SecurityConfig {
             .csrf { csrf -> csrf.disable()} // Cross-Site Forgery
             .authorizeHttpRequests {auth -> auth
                 .requestMatchers("/usuarios/login").permitAll()
-                .requestMatchers("/rutas_proteguidas/recurso2").permitAll()
-                .requestMatchers("/rutas_proteguidas/").authenticated()
-                .requestMatchers(HttpMethod.DELETE,"/rutas_proteguidas/eliminar/{nombre}").authenticated()
+                .requestMatchers("/usuarios/register").permitAll()
+                .requestMatchers(HttpMethod.GET,"/usuarios").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE,"/usuarios/{id}").hasRole("ADMIN")
+                .requestMatchers("/usuarios/{id}").authenticated()
 
-                .requestMatchers("/rutas_proteguidas/usuario_autenticado").authenticated()
-                .requestMatchers(HttpMethod.DELETE,"/rutas_proteguidas/recurso/{id}").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET,"/rutas_proteguidas/recurso/{id}").permitAll()
-                .requestMatchers("/rutas_extra_confidenciales/ficha1").authenticated()
-                .requestMatchers("/rutas_extra_confidenciales/ficha2").permitAll()
-                .requestMatchers("/rutas_publicas/**").permitAll()
+                .requestMatchers(HttpMethod.POST,"/servicios").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/servicios").permitAll()
+                .requestMatchers(HttpMethod.PUT,"/servicios").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE,"/servicios/{id}").hasRole("ADMIN")
+
+                .requestMatchers(HttpMethod.POST,"/citas").authenticated()
+                .requestMatchers(HttpMethod.GET,"/citas").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/citas/{id}").authenticated()
+                .requestMatchers(HttpMethod.PUT,"/citas").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE,"/citas/{id}").authenticated()
+
+
                 .anyRequest().authenticated()
             } // Los recursos protegidos y publicos
             .oauth2ResourceServer { oauth2 -> oauth2.jwt(Customizer.withDefaults()) }

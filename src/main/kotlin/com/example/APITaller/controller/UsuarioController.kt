@@ -10,10 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/usuarios")
@@ -43,7 +40,21 @@ class UsuarioController {
         usuarioService.registerUsuario(newUsuario)
 
         // Devolver el usuario insertado
-        return ResponseEntity(newUsuario, HttpStatus.CREATED) // Cambiar null por el usuario insertado
+        return ResponseEntity(newUsuario, HttpStatus.CREATED)
+
+    }
+
+
+    @GetMapping("/{id}/citas")
+    fun getCitasUsuario(
+        @PathVariable id: String
+    ) : ResponseEntity<Usuario?>? {
+
+        // Comprobación mínima
+        val usuario = usuarioService.findById(id)
+
+        // Devolver el usuario insertado
+        return ResponseEntity(usuario, HttpStatus.CREATED)
 
     }
 
@@ -70,6 +81,73 @@ class UsuarioController {
         println(authentication)
 
         return ResponseEntity(mapOf("token" to token),HttpStatus.CREATED)
+    }
+
+    @GetMapping
+    fun getAllUsuarios () : ResponseEntity<List<Usuario>?>? {
+        val usuarios = usuarioService.getAll()
+
+        return ResponseEntity(usuarios, HttpStatus.OK)
+    }
+
+    @GetMapping("/{id}")
+    fun getUsuarioById (
+        @PathVariable id : String
+    ) : ResponseEntity<Usuario?>? {
+        
+        val usuario = usuarioService.findById(id)
+        
+        return ResponseEntity(usuario, HttpStatus.OK)
+    }
+
+    @PutMapping("/{id}")
+    fun updateUsuario (
+        @PathVariable id : String,
+        @RequestBody usuario: Usuario,
+        authentication: Authentication
+    ) : ResponseEntity<Usuario?>? {
+        val usuarioActualizar: Usuario? = usuarioService.findById(id)
+        
+        if (usuarioActualizar == null) {
+            return ResponseEntity(null, HttpStatus.NOT_FOUND)
+        }else if(authentication.name == usuario.username || usuario.roles == "ROLE_ADMIN"){
+            usuarioService.updateUsuario(usuario,authentication)
+        }
+
+        return ResponseEntity(usuario, HttpStatus.OK)
+    }
+
+    @PutMapping("/{id}/{password}")
+    fun updateUsuarioPassword(
+        @PathVariable id: String,
+        @PathVariable password: String,
+        authentication: Authentication
+    ): ResponseEntity<String> {
+        // Buscar al usuario por ID
+        val usuario = usuarioService.findById(id)
+            ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado")
+
+        if (usuario.username == authentication.name) {
+            // Actualizar la contraseña
+            usuarioService.updateUsuarioPass(usuario,password,authentication)
+        }
+
+        return ResponseEntity.ok("Contraseña actualizada exitosamente")
+    }
+
+
+    @DeleteMapping("/{id}")
+    fun deleteUsuarioById (
+        @PathVariable id : String,
+        authentication: Authentication
+    ) : ResponseEntity<String> {
+
+        if (usuarioService.deleteUsuario(id,authentication)){
+
+            return ResponseEntity.ok("Usuario borrado exitosamente")
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado")
     }
 
 }

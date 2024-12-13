@@ -18,8 +18,8 @@ class Citas(
     @JoinColumn(name = "id_servicio", nullable = false)
     var servicio: Servicios? = null,
 
-    @Column(nullable = false)
-    var fecha_cita: Date? = null,
+    @Column(nullable = false, name = "fecha_cita")
+    var fechaCita: Date? = null,
 
     @Column(nullable = false)
     var estado: String? = "Pendiente"

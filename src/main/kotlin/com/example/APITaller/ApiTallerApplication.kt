@@ -10,5 +10,5 @@ import org.springframework.boot.runApplication
 class ApiTallerApplication
 
 fun main(args: Array<String>) {
-	runApplication<JwtSecurityKotlinApplication>(*args)
+	runApplication<ApiTallerApplication>(*args)
 }
