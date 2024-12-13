@@ -7,7 +7,7 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 @EnableConfigurationProperties(RSAKeysProperties::class)
-class ApiTallerApplication
+class JwtSecurityKotlinApplication
 
 fun main(args: Array<String>) {
 	runApplication<JwtSecurityKotlinApplication>(*args)
