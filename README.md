@@ -64,3 +64,96 @@ Facilitar la organización y gestión de servicios y citas en un taller de coche
 - **ID_Servicio**
 - **Fecha_Cita**
 - **Estado**
+
+---
+
+## EndPoints
+
+### **Usuarios**
+
+#### Crear un usuario (Registro)
+- **POST** `/usuarios`
+- **Acceso:** Todos (público general). Permitir a cualquier persona registrarse.
+
+#### Obtener todos los usuarios
+- **GET** `/usuarios`
+- **Acceso:** Administradores. Solo los administradores deberían tener acceso a esta información sensible.
+
+#### Obtener un usuario por ID
+- **GET** `/usuarios/{id}`
+- **Acceso:** Usuarios autenticados. Los usuarios solo deberían acceder a su propia información.
+  *(Ejemplo: Validar que el id del token coincide con el id del recurso solicitado).*
+
+#### Actualizar un usuario
+- **PUT** `/usuarios/{id}`
+- **Acceso:** Usuarios autenticados. Cada usuario puede actualizar su propia información.
+
+#### Eliminar un usuario
+- **DELETE** `/usuarios/{id}`
+- **Acceso:** Administradores. Solo los administradores pueden eliminar cuentas.
+
+---
+
+### **Servicios**
+
+#### Crear un servicio
+- **POST** `/servicios`
+- **Acceso:** Administradores. Solo el administrador puede crear nuevos servicios.
+
+#### Obtener todos los servicios
+- **GET** `/servicios`
+- **Acceso:** Todos. La lista de servicios debería estar disponible para cualquier usuario, autenticado o no.
+
+#### Obtener un servicio por ID
+- **GET** `/servicios/{id}`
+- **Acceso:** Todos. Similar al punto anterior, cualquier usuario puede consultar los detalles de un servicio.
+
+#### Actualizar un servicio
+- **PUT** `/servicios/{id}`
+- **Acceso:** Administradores. Solo los administradores pueden modificar servicios.
+
+#### Eliminar un servicio
+- **DELETE** `/servicios/{id}`
+- **Acceso:** Administradores. Solo los administradores pueden eliminar servicios.
+
+---
+
+### **Citas**
+
+#### Crear una cita
+- **POST** `/citas`
+- **Acceso:** Usuarios autenticados. Solo usuarios autenticados pueden solicitar una cita.
+
+#### Obtener todas las citas
+- **GET** `/citas`
+- **Acceso:** Administradores. Solo los administradores pueden ver todas las citas.
+
+#### Obtener una cita por ID
+- **GET** `/citas/{id}`
+- **Acceso:** Usuarios autenticados. Los usuarios solo pueden acceder a sus propias citas, y los administradores pueden acceder a cualquier cita.
+
+#### Actualizar una cita
+- **PUT** `/citas/{id}`
+- **Acceso:** Usuarios autenticados. Los usuarios pueden modificar sus propias citas (por ejemplo, cambiar la fecha).  
+  **Administradores** pueden modificar cualquier cita.
+
+#### Eliminar una cita
+- **DELETE** `/citas/{id}`
+- **Acceso:** Usuarios autenticados (propias citas) y Administradores (todas las citas).
+
+#### Obtener citas de un usuario específico
+- **GET** `/usuarios/{id}/citas`
+- **Acceso:** Usuarios autenticados. Los usuarios solo pueden ver sus propias citas. Los administradores pueden consultar cualquier usuario.
+
+---
+
+### **Endpoints adicionales**
+
+#### Autenticación (Login)
+- **POST** `/auth/login`
+- **Acceso:** Todos (público general). Necesario para que cualquier usuario obtenga un token.
+
+#### Actualizar contraseña
+- **PUT** `/usuarios/{id}/contraseña`
+- **Acceso:** Usuarios autenticados. Cada usuario puede cambiar su propia contraseña.
+
