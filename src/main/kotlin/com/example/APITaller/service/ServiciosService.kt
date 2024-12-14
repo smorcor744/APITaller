@@ -16,6 +16,15 @@ class ServiciosService {
      * MÉTODO PARA CREAR UN NUEVO SERVICIO
      */
     fun createServicio(servicio: Servicios): Servicios {
+        // Validar que el nombre no sea nulo o vacío
+        if (servicio.nombre.isNullOrBlank()) {
+            throw IllegalArgumentException("El nombre del servicio es obligatorio.")
+        }
+
+        // Validar que el precio no sea nulo ni negativo
+        if (servicio.precio == null || servicio.precio!! <= 0) {
+            throw IllegalArgumentException("El precio del servicio debe ser mayor a 0.")
+        }
         return serviciosRepository.save(servicio)
     }
 
@@ -32,6 +41,14 @@ class ServiciosService {
     fun findServicioById(id: String): Servicios? {
         val idLong = id.toLongOrNull() ?: return null
         return serviciosRepository.findById(idLong).orElse(null)
+    }
+
+    /**
+     * MÉTODO PARA OBTENER UN SERVICIO POR ID
+     */
+    fun findServicioByName(name: String?): Servicios? {
+
+        return serviciosRepository.findByNombre(name).orElse(null)
     }
 
     /**

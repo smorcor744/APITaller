@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class UsuarioService: UserDetailsService {
+
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
 
     @Autowired
     private lateinit var usuarioRepository: UsuarioRepository
@@ -21,7 +25,7 @@ class UsuarioService: UserDetailsService {
     TODO
      */
     override fun loadUserByUsername(username: String?): UserDetails {
-        var usuario: Usuario = usuarioRepository
+        val usuario: Usuario = usuarioRepository
             .findByUsername(username)
             .orElseThrow()
         return User
@@ -36,26 +40,25 @@ class UsuarioService: UserDetailsService {
     MÉTODO PARA INSERTAR UN USUARIO
      */
     fun registerUsuario(usuario: Usuario) : Usuario? {
+        // Creamos la instancia de Usuario
+        var newUsuario: Usuario? = null
 
         // Comprobamos que el usuario no existe en la base de datos
+        if(usuarioRepository.findByUsername(usuario.username).isEmpty) {
 
+            // Hasheamos la contraseña
+            val hashedPassword = passwordEncoder.encode(usuario.password)
 
-        // Creamos la instancia de Usuario
+            // Creamos un nuevo usuario con la contraseña hasheada
+            newUsuario = Usuario(null,usuario.username,hashedPassword,usuario.fecha_creacion,usuario.roles)
 
-
-        /*
-         La password del newUsuario debe estar hasheada, así que usamos el passwordEncoder que tenemos definido.
-         ¿De dónde viene ese passwordEncoder?
-         El objeto passwordEncoder está definido al principio de esta clase.
-         */
-
-
-        // Guardamos el newUsuario en la base de datos... igual que siempre
-
+            // Lo guardamos en la bd
+            usuarioRepository.save(newUsuario)
+        }
 
 
         // Devolvemos el Usuario insertado en la BDD
-        return null // Cambiar null por el usuario
+        return newUsuario
 
     }
 
@@ -70,6 +73,20 @@ class UsuarioService: UserDetailsService {
         return usuario
 
     }
+
+    fun findByName(name: String?) : Usuario? {
+
+        if(name.isNullOrBlank()){
+            return null
+        }
+        // Creamos la instancia de Usuario
+        val usuario: Usuario? = usuarioRepository.findByUsername(name).orElse(null)
+
+        // Devolvemos el Usuario
+        return usuario
+
+    }
+
 
 
     fun getAll() : List<Usuario>? {

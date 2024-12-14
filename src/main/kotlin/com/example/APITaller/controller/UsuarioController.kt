@@ -1,6 +1,9 @@
 package com.example.APITaller.controller
 
+import com.example.APITaller.error.exception.BadRequestException
+import com.example.APITaller.model.Citas
 import com.example.APITaller.model.Usuario
+import com.example.APITaller.service.CitasService
 import com.example.APITaller.service.TokenService
 import com.example.APITaller.service.UsuarioService
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +21,8 @@ class UsuarioController {
 
     @Autowired
     private lateinit var usuarioService: UsuarioService
-
+    @Autowired
+    private lateinit var citasService: CitasService
     @Autowired
     private lateinit var authenticationManager: AuthenticationManager
 
@@ -34,7 +38,10 @@ class UsuarioController {
     ) : ResponseEntity<Usuario?>? {
 
         // Comprobación mínima
-        // -> La obviamos por ahora
+        if (newUsuario.username.isNullOrBlank() && newUsuario.password.isNullOrBlank()) {
+            throw BadRequestException("El username y la contraseña son obligatorios")
+        }
+
 
         // Llamar al UsuarioService para insertar un usuario
         usuarioService.registerUsuario(newUsuario)
@@ -48,13 +55,13 @@ class UsuarioController {
     @GetMapping("/{id}/citas")
     fun getCitasUsuario(
         @PathVariable id: String
-    ) : ResponseEntity<Usuario?>? {
+    ) : ResponseEntity<List<Citas>?>? {
 
         // Comprobación mínima
-        val usuario = usuarioService.findById(id)
+        val citas = citasService.findCitasByUsuarioId(id)
 
         // Devolver el usuario insertado
-        return ResponseEntity(usuario, HttpStatus.CREATED)
+        return ResponseEntity(citas, HttpStatus.CREATED)
 
     }
 
@@ -75,8 +82,7 @@ class UsuarioController {
 
         // SI PASAMOS LA AUTENTIFICACION, SIGNIFICA QUE ESTAMOS BIEN AUTENTICADOS
         // PASAMOS A GENERAR EL TOKEN
-        var token = ""
-        token = tokenService.generarToken(authentication)
+        var token = tokenService.generarToken(authentication)
 
         println(authentication)
 
