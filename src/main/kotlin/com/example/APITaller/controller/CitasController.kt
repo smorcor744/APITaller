@@ -55,15 +55,25 @@ class CitasController {
 
     @PutMapping("/{id}")
     fun updateCita (
-        @RequestBody cita: Citas
-    ) : String {
-        return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"
+        @RequestBody cita: Citas,
+        authentication: Authentication
+    ) : ResponseEntity<Citas?>? {
+        if (authentication.name != cita.usuario?.username || cita.usuario?.roles != "ROLE_ADMIN") {
+            throw IllegalArgumentException("No puedes modificar una cita que no te pertenece")
+        }
+        citasService.updateCita(cita.id.toString(),cita)
+        return ResponseEntity(cita, HttpStatus.OK)
     }
 
     @DeleteMapping("/{id}")
     fun deleteCitaById (
-        @PathVariable id : String
-    ) : String {
-        return "Este recurso puede ser accedido por cualquiera, es público \uD83D\uDE0E"
+        @PathVariable id : String,
+        authentication: Authentication
+    ) : ResponseEntity<String?>? {
+        if (authentication.name != citasService.findCitaById(id)?.usuario?.username || citasService.findCitaById(id)?.usuario?.roles != "ROLE_ADMIN") {
+            throw IllegalArgumentException("No puedes eliminar una cita que no te pertenece")
+        }
+        citasService.deleteCita(id)
+        return ResponseEntity("Cita borrada correctamente", HttpStatus.OK)
     }
 }
