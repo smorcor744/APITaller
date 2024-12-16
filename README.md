@@ -22,48 +22,24 @@ Facilitar la organización y gestión de servicios y citas en un taller de coche
 ## Tablas a Gestionar
 
 ### Usuarios
-- **ID**: Identificador único del usuario *(int, PK, auto-increment)*
-- **Nombre**: Nombre del usuario *(varchar, not null)*
-- **Email**: Correo electrónico del usuario *(varchar, unique, not null)*
-- **Contraseña**: Contraseña del usuario *(varchar, not null)*
-- **Fecha_Creación**: Fecha de creación del usuario *(datetime, default current_timestamp)*
+- **ID**: Identificador único del usuario *(int, PK, auto-increment)*  
+- **Nombre**: Nombre del usuario *(varchar, not null)*  
+- **Email**: Correo electrónico del usuario *(varchar, unique, not null)*  
+- **Contraseña**: Contraseña del usuario *(varchar, not null)*  
+- **Fecha_Creación**: Fecha de creación del usuario *(datetime, default current_timestamp)*  
 
 ### Servicios
-- **ID**: Identificador único del servicio *(int, PK, auto-increment)*
-- **Nombre_Servicio**: Nombre del servicio *(varchar, not null)*
-- **Descripción**: Descripción del servicio *(text)*
-- **Precio**: Precio del servicio *(decimal, not null)*
+- **ID**: Identificador único del servicio *(int, PK, auto-increment)*  
+- **Nombre_Servicio**: Nombre del servicio *(varchar, not null)*  
+- **Descripción**: Descripción del servicio *(text)*  
+- **Precio**: Precio del servicio *(decimal, not null)*  
 
 ### Citas
-- **ID**: Identificador único de la cita *(int, PK, auto-increment)*
-- **ID_Usuario**: Identificador del usuario que solicita la cita *(int, FK, references Usuarios(ID))*
-- **ID_Servicio**: Identificador del servicio solicitado *(int, FK, references Servicios(ID))*
-- **Fecha_Cita**: Fecha y hora de la cita *(datetime, not null)*
-- **Estado**: Estado de la cita *(varchar, not null, default 'Pendiente')*
-
----
-
-## Campos y Tipos de Datos
-
-### Usuarios
-- **ID**
-- **Nombre**
-- **Email**
-- **Contraseña**
-- **Fecha_Creación**
-
-### Servicios
-- **ID**
-- **Nombre_Servicio**
-- **Descripción**
-- **Precio**
-
-### Citas
-- **ID**
-- **ID_Usuario**
-- **ID_Servicio**
-- **Fecha_Cita**
-- **Estado**
+- **ID**: Identificador único de la cita *(int, PK, auto-increment)*  
+- **ID_Usuario**: Identificador del usuario que solicita la cita *(int, FK, references Usuarios(ID))*  
+- **ID_Servicio**: Identificador del servicio solicitado *(int, FK, references Servicios(ID))*  
+- **Fecha_Cita**: Fecha y hora de la cita *(datetime, not null)*  
+- **Estado**: Estado de la cita *(varchar, not null, default 'Pendiente')*  
 
 ---
 
@@ -72,201 +48,189 @@ Facilitar la organización y gestión de servicios y citas en un taller de coche
 ### **Usuarios**
 
 #### Crear un usuario (Registro)
-- **POST** `/usuarios/register`
-- **Acceso:** Todos (público general). Permitir a cualquier persona registrarse.
+- **POST** `/usuarios/register`  
+- **Acceso:** Público general. Permite a cualquier persona registrarse.
 
 #### Obtener todos los usuarios
-- **GET** `/usuarios`
-- **Acceso:** Administradores. Solo los administradores deberían tener acceso a esta información sensible.
+- **GET** `/usuarios`  
+- **Acceso:** Solo administradores.
 
 #### Obtener un usuario por ID
-- **GET** `/usuarios/{id}`
-- **Acceso:** Usuarios autenticados. Los usuarios solo deberían acceder a su propia información.
-  *(Ejemplo: Validar que el id del token coincide con el id del recurso solicitado).*
+- **GET** `/usuarios/{id}`  
+- **Acceso:** Usuarios autenticados (solo pueden acceder a su propia información).  
+  *(Validación: El ID del token debe coincidir con el ID solicitado).*
 
-  #### Obtener todas las citas de los usuarios
-- **GET** `/usuarios/{id}/citas`
-- **Acceso:** Usuarios autenticados. Los usuarios solo deberían acceder a su propia información.
+#### Obtener todas las citas de un usuario
+- **GET** `/usuarios/{id}/citas`  
+- **Acceso:** Usuarios autenticados.
 
 #### Actualizar un usuario
-- **PUT** `/usuarios/{id}`
-- **Acceso:** Usuarios autenticados. Cada usuario puede actualizar su propia información.
+- **PUT** `/usuarios/{id}`  
+- **Acceso:** Usuarios autenticados (solo pueden modificar su propia información).
 
 #### Eliminar un usuario
-- **DELETE** `/usuarios/{id}`
-- **Acceso:** Administradores. Solo los administradores pueden eliminar cuentas.
+- **DELETE** `/usuarios/{id}`  
+- **Acceso:** Solo administradores.
 
 ---
 
 ### **Servicios**
 
 #### Crear un servicio
-- **POST** `/servicios`
-- **Acceso:** Administradores. Solo el administrador puede crear nuevos servicios.
+- **POST** `/servicios`  
+- **Acceso:** Solo administradores.
 
 #### Obtener todos los servicios
-- **GET** `/servicios`
-- **Acceso:** Todos. La lista de servicios debería estar disponible para cualquier usuario, autenticado o no.
+- **GET** `/servicios`  
+- **Acceso:** Público general.
 
 #### Obtener un servicio por ID
-- **GET** `/servicios/{id}`
-- **Acceso:** Todos. Similar al punto anterior, cualquier usuario puede consultar los detalles de un servicio.
+- **GET** `/servicios/{id}`  
+- **Acceso:** Público general.
 
 #### Actualizar un servicio
-- **PUT** `/servicios/{id}`
-- **Acceso:** Administradores. Solo los administradores pueden modificar servicios.
+- **PUT** `/servicios/{id}`  
+- **Acceso:** Solo administradores.
 
 #### Eliminar un servicio
-- **DELETE** `/servicios/{id}`
-- **Acceso:** Administradores. Solo los administradores pueden eliminar servicios.
+- **DELETE** `/servicios/{id}`  
+- **Acceso:** Solo administradores.
 
 ---
 
 ### **Citas**
 
 #### Crear una cita
-- **POST** `/citas`
-- **Acceso:** Usuarios autenticados. Solo usuarios autenticados pueden solicitar una cita.
+- **POST** `/citas`  
+- **Acceso:** Usuarios autenticados.
 
 #### Obtener todas las citas
-- **GET** `/citas`
-- **Acceso:** Administradores. Solo los administradores pueden ver todas las citas.
+- **GET** `/citas`  
+- **Acceso:** Solo administradores.
 
 #### Obtener una cita por ID
-- **GET** `/citas/{id}`
-- **Acceso:** Usuarios autenticados. Los usuarios solo pueden acceder a sus propias citas, y los administradores pueden acceder a cualquier cita.
+- **GET** `/citas/{id}`  
+- **Acceso:** Usuarios autenticados (solo pueden acceder a sus propias citas).
 
 #### Actualizar una cita
-- **PUT** `/citas/{id}`
-- **Acceso:** Usuarios autenticados. Los usuarios pueden modificar sus propias citas (por ejemplo, cambiar la fecha).  
-  **Administradores** pueden modificar cualquier cita.
+- **PUT** `/citas/{id}`  
+- **Acceso:** Usuarios autenticados (propias citas) y administradores.
 
 #### Eliminar una cita
-- **DELETE** `/citas/{id}`
-- **Acceso:** Usuarios autenticados (propias citas) y Administradores (todas las citas).
-
-#### Obtener citas de un usuario específico
-- **GET** `/usuarios/{id}/citas`
-- **Acceso:** Usuarios autenticados. Los usuarios solo pueden ver sus propias citas. Los administradores pueden consultar cualquier usuario.
+- **DELETE** `/citas/{id}`  
+- **Acceso:** Usuarios autenticados (propias citas) y administradores.
 
 ---
 
-### **Endpoints adicionales**
+### **Autenticación**
 
-#### Autenticación (Login)
-- **POST** `/auth/login`
-- **Acceso:** Todos (público general). Necesario para que cualquier usuario obtenga un token.
+#### Iniciar sesión
+- **POST** `/auth/login`  
+- **Acceso:** Público general. Devuelve un token JWT.
 
 #### Actualizar contraseña
-- **PUT** `/usuarios/{id}/contraseña`
-- **Acceso:** Usuarios autenticados. Cada usuario puede cambiar su propia contraseña.
+- **PUT** `/usuarios/{id}/contraseña`  
+- **Acceso:** Usuarios autenticados.
 
-### **Lógica de negocio**
+---
 
-#### Gestión de usuarios:
+## Lógica de Negocio
 
-- Los usuarios deben registrarse con un correo electrónico único.
-- Las contraseñas se almacenan cifradas usando un algoritmo de hash seguro (como BCrypt).
-- Los usuarios pueden actualizar su información, pero no pueden cambiar su rol.
-  
-#### Gestión de servicios:
+### Gestión de Usuarios
+- Registro con correos únicos.  
+- Contraseñas cifradas con **BCrypt**.  
+- Los usuarios no pueden cambiar su rol.  
 
-- Solo los administradores pueden agregar, actualizar o eliminar servicios.
-- Los servicios están disponibles públicamente para que los usuarios puedan consultarlos.
-  
-#### Gestión de citas:
+### Gestión de Servicios
+- Solo los administradores pueden crear, actualizar o eliminar servicios.  
+- Los servicios están disponibles públicamente.  
 
-- Los usuarios autenticados pueden crear citas seleccionando un servicio y una fecha/hora disponible.
-- Las citas solo pueden ser actualizadas o canceladas por el usuario que las creó o por un administrador.
-- El estado de una cita puede ser actualizado por un administrador para reflejar su progreso (e.g., "Pendiente", "En Proceso", "Completada").
-  
-#### Restricciones de acceso:
+### Gestión de Citas
+- Los usuarios autenticados pueden crear citas seleccionando un servicio y una fecha/hora disponible.  
+- Los administradores pueden modificar el estado de una cita (e.g., "Pendiente", "En Proceso", "Completada").  
 
-- Los usuarios solo pueden acceder a sus propios datos y citas.
-- Los administradores tienen acceso completo a todas las entidades.
+### Restricciones de Acceso
+- Validación en cada endpoint para asegurar permisos adecuados.  
+- Usuarios solo pueden acceder a sus propios datos.  
+- Los administradores tienen acceso total.  
 
-### **Excepciones y códigos de estado**
+---
 
-#### Usuarios:
+## Excepciones y Códigos de Estado
 
-- 400 Bad Request: Datos inválidos en el registro o actualización.
-- 401 Unauthorized: Usuario no autenticado.
-- 404 Not Found: Usuario no encontrado.
+### Usuarios
+- **400 Bad Request:** Datos inválidos.  
+- **401 Unauthorized:** Usuario no autenticado.  
+- **404 Not Found:** Usuario no encontrado.  
 
-#### Servicios:
+### Servicios
+- **400 Bad Request:** Datos inválidos.  
+- **401 Unauthorized:** Usuario no autenticado.  
+- **404 Not Found:** Servicio no encontrado.  
 
-- 400 Bad Request: Datos inválidos en el registro o actualización.
-- 401 Unauthorized: Usuario no autenticado.
-- 404 Not Found: Usuario no encontrado.
-  
-#### Citas:
+### Citas
+- **400 Bad Request:** Datos inválidos.  
+- **401 Unauthorized:** Usuario no autenticado.  
+- **404 Not Found:** Cita no encontrada.  
 
-- 400 Bad Request: Datos inválidos en el registro o actualización.
-- 401 Unauthorized: Usuario no autenticado.
-- 404 Not Found: Usuario no encontrado.
+### Autenticación
+- **401 Unauthorized:** Credenciales inválidas.  
 
-#### Autenticación:
+---
 
-- 401 Unauthorized: Credenciales inválidas al iniciar sesión.
-- 400 Bad Request: Datos inválidos en el registro o actualización.
+## Restricciones de Seguridad
 
-### **Restricciones de seguridad**
+### Cifrado
+- Contraseñas cifradas con **BCrypt**.  
+- Uso de **JWT** con claves asimétricas (RSA).  
 
-## Cifrado:
+### Autenticación
+- Los tokens incluyen roles y expiran automáticamente.  
 
-- Contraseñas almacenadas con hash seguro (BCrypt).
-- Uso de cifrado asimétrico (RSA) para las claves pública y privada en el manejo de tokens JWT.
+### Autorización
+- Validación de roles en cada endpoint.  
 
-## Autenticación:
+### Protección contra ataques
+- Validación de entrada para prevenir inyección SQL y XSS.  
+- Uso de **HTTPS** para proteger los datos en tránsito.  
 
-- Uso de JWT para autenticar y autorizar a los usuarios.
-- Los tokens incluyen información como el rol del usuario para validar permisos.
+---
 
-## Autorización:
+## Pruebas
 
-# Restricciones de acceso basadas en roles:
+### Funcionales
+- Registro, login y obtención de token JWT.  
+- CRUD de usuarios, servicios y citas.  
+- Validación de permisos según roles.  
 
-- Los administradores tienen permisos completos.
-- Los usuarios regulares solo pueden acceder/modificar sus propios datos y citas.
-- Validación en cada endpoint para asegurar que el usuario autenticado tiene permisos para realizar la acción solicitada.
+### Seguridad
+- Acceso no autorizado a recursos.  
+- Verificación de contraseñas cifradas.  
 
-## Protección contra ataques comunes:
+### Errores
+- Registro con correos duplicados.  
+- Solicitudes con datos inválidos.  
 
-- Validación de entrada para prevenir ataques de inyección SQL y XSS.
-- Uso de HTTPS para garantizar la seguridad de los datos en tránsito.
+---
 
-Pruebas
-Pruebas funcionales:
+## Documentación Adicional
 
-Verificar el registro, inicio de sesión y obtención de token JWT.
-Crear, actualizar y eliminar usuarios, servicios y citas.
-Validar restricciones de acceso para usuarios y administradores.
-Pruebas de seguridad:
+### Tecnologías Utilizadas
+- **Spring Boot:** Desarrollo de la API REST.  
+- **Spring Security:** Gestión de autenticación y autorización.  
+- **JWT:** Autenticación basada en tokens.  
+- **MySQL:** Base de datos relacional.  
+- **Postman:** Pruebas de los endpoints.  
+- **BCrypt:** Cifrado de contraseñas.  
 
-Intentar acceder a datos de otros usuarios sin permisos.
-Verificar la expiración y revocación de tokens JWT.
-Validar que las contraseñas se almacenan de manera segura.
-Pruebas de errores:
+### Principios REST Aplicados
+- **Uniform Interface:** Métodos estándar HTTP (GET, POST, PUT, DELETE).  
+- **Statelessness:** Cada solicitud incluye toda la información necesaria.  
+- **Layered System:** Separación entre cliente y servidor.  
 
-Intentar registrar usuarios con correos duplicados.
-Probar endpoints con datos inválidos o incompletos.
-Documentación adicional
-Tecnologías utilizadas:
+---
 
-Spring Boot: Framework para el desarrollo de la API REST.
-Spring Security: Gestión de autenticación y autorización.
-JWT: Manejo de tokens para autenticación.
-MySQL: Base de datos relacional para almacenar datos.
-Postman: Pruebas de los endpoints de la API.
-BCrypt: Hashing de contraseñas.
-Principios de REST aplicados:
-
-Uniform Interface: Uso de métodos HTTP estándar (GET, POST, PUT, DELETE).
-Statelessness: Cada solicitud incluye toda la información necesaria para procesarla.
-Layered System: Separación entre cliente y servidor.
-Resource Representation: Los datos se exponen como recursos identificados por URI.
-
-Ventajas de la separación cliente-servidor
-Escalabilidad: Permite escalar el cliente y el servidor de manera independiente.
-Reutilización: La API puede ser utilizada por múltiples clientes (web, móvil, etc.).
-Mantenimiento: Facilita la actualización y el mantenimiento de cada componente.
+## Ventajas de la Separación Cliente-Servidor
+- **Escalabilidad:** Cliente y servidor pueden escalarse independientemente.  
+- **Reutilización:** La API puede ser utilizada por múltiples plataformas.  
+- **Mantenimiento:** Facilita la actualización de cada componente.  
