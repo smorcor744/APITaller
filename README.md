@@ -72,7 +72,7 @@ Facilitar la organización y gestión de servicios y citas en un taller de coche
 ### **Usuarios**
 
 #### Crear un usuario (Registro)
-- **POST** `/usuarios`
+- **POST** `/usuarios/register`
 - **Acceso:** Todos (público general). Permitir a cualquier persona registrarse.
 
 #### Obtener todos los usuarios
@@ -83,6 +83,10 @@ Facilitar la organización y gestión de servicios y citas en un taller de coche
 - **GET** `/usuarios/{id}`
 - **Acceso:** Usuarios autenticados. Los usuarios solo deberían acceder a su propia información.
   *(Ejemplo: Validar que el id del token coincide con el id del recurso solicitado).*
+
+  #### Obtener todas las citas de los usuarios
+- **GET** `/usuarios/{id}/citas`
+- **Acceso:** Usuarios autenticados. Los usuarios solo deberían acceder a su propia información.
 
 #### Actualizar un usuario
 - **PUT** `/usuarios/{id}`
@@ -157,3 +161,112 @@ Facilitar la organización y gestión de servicios y citas en un taller de coche
 - **PUT** `/usuarios/{id}/contraseña`
 - **Acceso:** Usuarios autenticados. Cada usuario puede cambiar su propia contraseña.
 
+### **Lógica de negocio**
+
+#### Gestión de usuarios:
+
+- Los usuarios deben registrarse con un correo electrónico único.
+- Las contraseñas se almacenan cifradas usando un algoritmo de hash seguro (como BCrypt).
+- Los usuarios pueden actualizar su información, pero no pueden cambiar su rol.
+  
+#### Gestión de servicios:
+
+- Solo los administradores pueden agregar, actualizar o eliminar servicios.
+- Los servicios están disponibles públicamente para que los usuarios puedan consultarlos.
+  
+#### Gestión de citas:
+
+- Los usuarios autenticados pueden crear citas seleccionando un servicio y una fecha/hora disponible.
+- Las citas solo pueden ser actualizadas o canceladas por el usuario que las creó o por un administrador.
+- El estado de una cita puede ser actualizado por un administrador para reflejar su progreso (e.g., "Pendiente", "En Proceso", "Completada").
+  
+#### Restricciones de acceso:
+
+- Los usuarios solo pueden acceder a sus propios datos y citas.
+- Los administradores tienen acceso completo a todas las entidades.
+
+### **Excepciones y códigos de estado**
+
+#### Usuarios:
+
+- 400 Bad Request: Datos inválidos en el registro o actualización.
+- 401 Unauthorized: Usuario no autenticado.
+- 404 Not Found: Usuario no encontrado.
+
+#### Servicios:
+
+- 400 Bad Request: Datos inválidos en el registro o actualización.
+- 401 Unauthorized: Usuario no autenticado.
+- 404 Not Found: Usuario no encontrado.
+  
+#### Citas:
+
+- 400 Bad Request: Datos inválidos en el registro o actualización.
+- 401 Unauthorized: Usuario no autenticado.
+- 404 Not Found: Usuario no encontrado.
+
+#### Autenticación:
+
+- 401 Unauthorized: Credenciales inválidas al iniciar sesión.
+- 400 Bad Request: Datos inválidos en el registro o actualización.
+
+### **Restricciones de seguridad**
+
+## Cifrado:
+
+- Contraseñas almacenadas con hash seguro (BCrypt).
+- Uso de cifrado asimétrico (RSA) para las claves pública y privada en el manejo de tokens JWT.
+
+## Autenticación:
+
+- Uso de JWT para autenticar y autorizar a los usuarios.
+- Los tokens incluyen información como el rol del usuario para validar permisos.
+
+## Autorización:
+
+# Restricciones de acceso basadas en roles:
+
+- Los administradores tienen permisos completos.
+- Los usuarios regulares solo pueden acceder/modificar sus propios datos y citas.
+- Validación en cada endpoint para asegurar que el usuario autenticado tiene permisos para realizar la acción solicitada.
+
+## Protección contra ataques comunes:
+
+- Validación de entrada para prevenir ataques de inyección SQL y XSS.
+- Uso de HTTPS para garantizar la seguridad de los datos en tránsito.
+
+Pruebas
+Pruebas funcionales:
+
+Verificar el registro, inicio de sesión y obtención de token JWT.
+Crear, actualizar y eliminar usuarios, servicios y citas.
+Validar restricciones de acceso para usuarios y administradores.
+Pruebas de seguridad:
+
+Intentar acceder a datos de otros usuarios sin permisos.
+Verificar la expiración y revocación de tokens JWT.
+Validar que las contraseñas se almacenan de manera segura.
+Pruebas de errores:
+
+Intentar registrar usuarios con correos duplicados.
+Probar endpoints con datos inválidos o incompletos.
+Documentación adicional
+Tecnologías utilizadas:
+
+Spring Boot: Framework para el desarrollo de la API REST.
+Spring Security: Gestión de autenticación y autorización.
+JWT: Manejo de tokens para autenticación.
+MySQL: Base de datos relacional para almacenar datos.
+Postman: Pruebas de los endpoints de la API.
+BCrypt: Hashing de contraseñas.
+Principios de REST aplicados:
+
+Uniform Interface: Uso de métodos HTTP estándar (GET, POST, PUT, DELETE).
+Statelessness: Cada solicitud incluye toda la información necesaria para procesarla.
+Layered System: Separación entre cliente y servidor.
+Resource Representation: Los datos se exponen como recursos identificados por URI.
+
+Ventajas de la separación cliente-servidor
+Escalabilidad: Permite escalar el cliente y el servidor de manera independiente.
+Reutilización: La API puede ser utilizada por múltiples clientes (web, móvil, etc.).
+Mantenimiento: Facilita la actualización y el mantenimiento de cada componente.
