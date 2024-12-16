@@ -160,21 +160,25 @@ Facilitar la organización y gestión de servicios y citas en un taller de coche
 
 ### Usuarios
 - **400 Bad Request:** Datos inválidos.  
-- **401 Unauthorized:** Usuario no autenticado.  
+- **401 Unauthorized:** Usuario no autenticado.
+- **403 Forbidden:** Intento de acceder/modificar una cita de otro usuario. 
 - **404 Not Found:** Usuario no encontrado.  
 
 ### Servicios
 - **400 Bad Request:** Datos inválidos.  
-- **401 Unauthorized:** Usuario no autenticado.  
+- **401 Unauthorized:** Usuario no autenticado.
+- **403 Forbidden:** Intento de acceder/modificar una cita de otro usuario. 
 - **404 Not Found:** Servicio no encontrado.  
 
 ### Citas
 - **400 Bad Request:** Datos inválidos.  
-- **401 Unauthorized:** Usuario no autenticado.  
+- **401 Unauthorized:** Usuario no autenticado.
+- **403 Forbidden:** Intento de acceder/modificar una cita de otro usuario. 
 - **404 Not Found:** Cita no encontrada.  
 
 ### Autenticación
 - **401 Unauthorized:** Credenciales inválidas.  
+- **403 Forbidden:** Intento de acceder/modificar una cita de otro usuario. 
 
 ---
 
