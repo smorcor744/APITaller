@@ -1,12 +1,7 @@
 package com.example.APITaller.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
-import java.util.*
+import com.fasterxml.jackson.annotation.JsonManagedReference
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "usuarios")
@@ -18,10 +13,8 @@ data class Usuario(
     var username: String? = null,
 
     @Column(nullable = false)
-    var password: String? = null,
+    var password: String? = null,//'$2a$10$DBc2FPq.4XperQMRTGpYnufwdTFxFCJtRZj1zsX.7vFo9YVe9rCyW'
 
-    @Column(nullable = false)
-    var fecha_creacion: Date? = null,
 
     var roles: String? = null // e.g., "ROLE_USER,ROLE_ADMIN"
 

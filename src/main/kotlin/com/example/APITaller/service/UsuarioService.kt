@@ -50,7 +50,7 @@ class UsuarioService: UserDetailsService {
             val hashedPassword = passwordEncoder.encode(usuario.password)
 
             // Creamos un nuevo usuario con la contraseña hasheada
-            newUsuario = Usuario(null,usuario.username,hashedPassword,usuario.fecha_creacion,usuario.roles)
+            newUsuario = Usuario(null,usuario.username,hashedPassword,usuario.roles)
 
             // Lo guardamos en la bd
             usuarioRepository.save(newUsuario)
@@ -104,10 +104,11 @@ class UsuarioService: UserDetailsService {
 
         // Creamos la instancia de Usuario
 
+        val pass = passwordEncoder.encode(usuario.password)
         val usuarioEmisor = usuarioRepository.findByUsername(authentication.name).get()
 
         if(usuarioEmisor.id == usuario.id || usuarioEmisor.roles == "ROLE_ADMIN"){
-
+            usuario.password = pass
             // Guardamos el usuario actualizado en la bd
             return usuarioRepository.save(usuario)
         }
@@ -117,12 +118,12 @@ class UsuarioService: UserDetailsService {
 
     }
 
-    fun updateUsuarioPass(usuario: Usuario,pass: String,authentication: Authentication) : Usuario? {
+    fun updateUsuarioPass(usuario: Usuario,password: String,authentication: Authentication) : Usuario? {
 
         // Creamos la instancia de Usuario
-
+        val pass = passwordEncoder.encode(password)
         val usuarioEmisor = usuarioRepository.findByUsername(authentication.name).get()
-        val nuevoUsuario = Usuario(usuario.id,usuario.username,pass,usuario.fecha_creacion,usuario.roles)
+        val nuevoUsuario = Usuario(usuario.id,usuario.username,pass,usuario.roles)
 
 
         if(usuarioEmisor.id == usuario.id || usuarioEmisor.roles == "ROLE_ADMIN"){

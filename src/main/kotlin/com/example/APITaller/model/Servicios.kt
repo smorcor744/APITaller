@@ -1,5 +1,6 @@
 package com.example.APITaller.model
 
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import jakarta.persistence.*
 
 @Entity
@@ -9,7 +10,7 @@ class Servicios (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false,name = "nombre_servicio")
     var nombre: String? = null,
 
     @Column

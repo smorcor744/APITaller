@@ -39,46 +39,47 @@ class ServiciosService {
      * MÉTODO PARA OBTENER UN SERVICIO POR ID
      */
     fun findServicioById(id: String): Servicios? {
-        val idLong = id.toLongOrNull() ?: return null
+        val idLong = id.toLongOrNull() ?: throw IllegalArgumentException("ID inválido: $id")
         return serviciosRepository.findById(idLong).orElse(null)
     }
 
     /**
-     * MÉTODO PARA OBTENER UN SERVICIO POR ID
+     * MÉTODO PARA OBTENER UN SERVICIO POR NOMBRE
      */
     fun findServicioByName(name: String?): Servicios? {
-
+        if (name.isNullOrBlank()) {
+            throw IllegalArgumentException("El nombre del servicio es obligatorio.")
+        }
         return serviciosRepository.findByNombre(name).orElse(null)
     }
 
     /**
      * MÉTODO PARA ACTUALIZAR UN SERVICIO
      */
-    fun updateServicio(id: String, servicio: Servicios): Servicios? {
-        val idLong = id.toLongOrNull() ?: return null
+    fun updateServicio(id: String, servicio: Servicios): Servicios {
+        val idLong = id.toLongOrNull() ?: throw IllegalArgumentException("ID inválido: $id")
 
         // Verificamos si el servicio existe
-        val servicioExistente = serviciosRepository.findById(idLong)
-        if (servicioExistente.isEmpty) {
-            throw IllegalArgumentException("El servicio con ID \${idLong} no existe")
+        val servicioExistente = serviciosRepository.findById(idLong).orElseThrow {
+            IllegalArgumentException("El servicio con ID $idLong no existe")
         }
 
         // Actualizamos los datos del servicio existente
-        val servicioActualizado = servicioExistente.get().apply {
+        servicioExistente.apply {
             this.nombre = servicio.nombre
             this.descripcion = servicio.descripcion
             this.precio = servicio.precio
         }
 
         // Guardamos el servicio actualizado
-        return serviciosRepository.save(servicioActualizado)
+        return serviciosRepository.save(servicioExistente)
     }
 
     /**
      * MÉTODO PARA ELIMINAR UN SERVICIO
      */
     fun deleteServicio(id: String): Boolean {
-        val idLong = id.toLongOrNull() ?: return false
+        val idLong = id.toLongOrNull() ?: throw IllegalArgumentException("ID inválido: $id")
 
         return if (serviciosRepository.existsById(idLong)) {
             serviciosRepository.deleteById(idLong)

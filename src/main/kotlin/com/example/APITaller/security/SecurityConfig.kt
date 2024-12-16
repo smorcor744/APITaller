@@ -52,7 +52,7 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/citas").authenticated()
                 .requestMatchers(HttpMethod.GET,"/citas").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/citas/{id}").authenticated()
-                .requestMatchers(HttpMethod.PUT,"/citas").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/citas/{id}").authenticated()
                 .requestMatchers(HttpMethod.DELETE,"/citas/{id}").authenticated()
 
 

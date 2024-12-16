@@ -51,19 +51,34 @@ class UsuarioController {
 
     }
 
-
     @GetMapping("/{id}/citas")
     fun getCitasUsuario(
-        @PathVariable id: String
-    ) : ResponseEntity<List<Citas>?>? {
+        @PathVariable id: String,
+        authentication: Authentication
+    ): ResponseEntity<List<Citas>> {
+        // Validar que el ID es numérico
+        val idUsuario = id.toLongOrNull()
+            ?: throw BadRequestException("El ID del usuario debe ser un número válido.")
+        val usuario = usuarioService.findById(idUsuario.toString())
 
-        // Comprobación mínima
-        val citas = citasService.findCitasByUsuarioId(id)
+        // Verificar que el usuario autenticado tiene acceso
+        if (usuario != null) {
+            if (usuario.username != authentication.name && usuario.roles != "ROLE_ADMIN") {
+                throw IllegalArgumentException("No tienes permiso para acceder a las citas de este usuario.")
+            }
+            // Obtener las citas del usuario
+            val citas = citasService.findCitasByUsuarioId(id)
+            if (citas.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(emptyList())
+            }
 
-        // Devolver el usuario insertado
-        return ResponseEntity(citas, HttpStatus.CREATED)
+            // Devolver las citas
+            return ResponseEntity.ok(citas)
+        }
 
+        throw BadRequestException("Usuario no encontrado.")
     }
+
 
 
     /*
@@ -98,10 +113,17 @@ class UsuarioController {
 
     @GetMapping("/{id}")
     fun getUsuarioById (
-        @PathVariable id : String
+        @PathVariable id : String,
+        authentication: Authentication
     ) : ResponseEntity<Usuario?>? {
         
         val usuario = usuarioService.findById(id)
+        if (usuario != null) {
+            if (usuario.username != authentication.name && usuario.roles != "ROLE_ADMIN") {
+                throw IllegalArgumentException("No puedes acceder a otro usuario")
+            }
+        }
+
         
         return ResponseEntity(usuario, HttpStatus.OK)
     }
@@ -140,7 +162,6 @@ class UsuarioController {
 
         return ResponseEntity.ok("Contraseña actualizada exitosamente")
     }
-
 
     @DeleteMapping("/{id}")
     fun deleteUsuarioById (
